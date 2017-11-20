@@ -1,7 +1,6 @@
 <core:View xmlns:core="sap.ui.core" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:layout="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:viz="sap.viz.ui5.controls" xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds" xmlns:viz.data="sap.viz.ui5.data" controllerName="odataconsumption.controller.main" displayBlock="true" class="sapUiSizeCompact" height="100%">
 	<App>
-		<pages>
-			<Page title="{i18n>TITLE}">
+		<pages><Page title="{i18n>TITLE}">
 			<content><Panel id="__panel1">
 			        <content>
 			            <Image width="140px" height="140px" id="__image0"/>
@@ -11,7 +10,27 @@
 			        </content>
 			    </Panel>
 			    <Image width="140px" height="140px" id="__image1"/>
-			    <Label text="Label" width="100%" id="__label10"/><layout:FixFlex id="chartFixFlex" minFlexSize="250">
+			    <Panel xmlns="sap.m" width="100%" accessibleRole="Complementary">
+			        
+			    <content>
+			        
+			        <HBox width="100%" id="__hbox2">
+			        
+			            <items>
+			        
+			                <StandardTile title="Rotation" info="Info" icon="sap-icon://customer" activeIcon="sap-icon://customer" number="123" numberUnit="eur" infoState="Success" id="__tile0"/>
+			        
+			                <StandardTile title="Angle" info="Info" icon="sap-icon://customer" activeIcon="sap-icon://customer" number="123" numberUnit="eur" infoState="Success" id="__tile2"/>
+			        
+			                <StandardTile title="Temperature" info="Info" icon="sap-icon://customer" activeIcon="sap-icon://customer" number="123" numberUnit="eur" infoState="Success" id="__tile1"/>
+			        
+			            </items>
+			        
+			        </HBox>
+			        
+			    </content>
+			        
+			    </Panel><layout:FixFlex id="chartFixFlex" minFlexSize="250">
 					<layout:fixContent>
 						<Panel xmlns="sap.m" width="100%">
 							<HBox>
