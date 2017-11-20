@@ -73,16 +73,16 @@ sap.ui.define([
 			this.getView().setModel(this._oChartModel, "chart");
 
 			this.initChart();
-
+			//BH:Not Needed anymore
 			// Wait until all promises are resolved and set default selection
-			Models.loadRDMSModels(this._oDeviceModel, this._oDeviceTypesModel, this._oMeasureModel).then(function(mValues) {
+			//Models.loadRDMSModels(this._oDeviceModel, this._oDeviceTypesModel, this._oMeasureModel).then(function(mValues) {
 				// Get devices
-				var mDevices = mValues[0];
-				if (mDevices.length > 0) {
+			//	var mDevices = mValues[0];
+			//	if (mDevices.length > 0) {
 					// Set selection to first device
-					this.changeDevice(mDevices[0].id);
-				}
-			}.bind(this));
+			//		this.changeDevice(mDevices[0].id);
+			//	}
+			//}.bind(this));
 		},
 
 		/**
