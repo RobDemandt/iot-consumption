@@ -86,33 +86,7 @@ function(Controller, JSONModel, Models) {
 			
 			
 
-
-<<<<<<< HEAD
-=======
-			oModel.loadData("./models/model.json");
-			//this._TileModel.loadData("./models/model.json");
-			this.getView().setModel(oModel,"GlobalTile");
-			//this.getView().setModel(this._TileModel,"GlobalTile");
-			
-
-			//Once the model has been provisoned we can start updating the tiles
-			oModel.attachRequestCompleted(function() {
-
-				var testModel = new sap.ui.model.json.JSONModel();
-				testModel.attachRequestCompleted(function() {
-					//console.log(testModel.getJSON());
-				oModel.setProperty("/TileCollection/0/number", testModel.getProperty("/d/results/0/C_HUMIDITY"));
-				oModel.setProperty("/TileCollection/1/number", testModel.getProperty("/d/results/0/C_TEMPERATURE"));
-				oModel.setProperty("/TileCollection/2/number", testModel.getProperty("/d/results/0/C_DISTANCE"));
-				oModel.setProperty("/TileCollection/4/number", testModel.getProperty("/d/results/0/C_TILT"));
-				});
-				testModel.attachRequestFailed(function() {
-					console.log(false, "Error handler should not be called when request is aborted via destroy!");
-				});
-				testModel.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
-
-			});
->>>>>>> branch 'master' of https://github.com/RobDemandt/iot-consumption.git
+			this.oModel.loadData("./models/model.json");
 
 			this.initChart();
 			//BH:Not Needed anymore
