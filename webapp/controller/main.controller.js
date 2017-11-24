@@ -84,10 +84,10 @@ function(Controller, JSONModel, Models) {
 
 			//Creation of JSON model for Tiles 
 
-			//oModel.loadData("./models/model.json");
-			this._TileModel.loadData("./models/model.json");
-			//this.getView().setModel(oModel,"GlobalTile");
-			this.getView().setModel(this._TileModel,"GlobalTile");
+			oModel.loadData("./models/model.json");
+			//this._TileModel.loadData("./models/model.json");
+			this.getView().setModel(oModel,"GlobalTile");
+			//this.getView().setModel(this._TileModel,"GlobalTile");
 			
 
 			//Once the model has been provisoned we can start updating the tiles
