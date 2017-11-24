@@ -93,12 +93,9 @@ sap.ui.define([
 				headers.Authorization = "Access-Control-Allow-Origin: *.ondemand.com";
 				headers.setHeader = "X-Requested-With: JSONHttpRequest";
 				headers.setHeader = "Content-type: application/x-www-form-urlencoded";
-
-				oModelTileInput = new sap.ui.model.odata.ODataModel(
-					"https://iotmmss0015222403trial.hanatrial.ondemand.com/com.sap.iotservices.mms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1",
-					true, "s0015222403", "p3nt1um@",headers);
-					
-				alert(oModelTileInput.read());
+				
+				var oModelTileInput = new sap.ui.model.json.JSONModel();
+				oModelTileInput.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1");
 
 			});
 			
