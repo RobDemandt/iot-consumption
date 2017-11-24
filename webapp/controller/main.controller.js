@@ -2,7 +2,8 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/json/JSONModel",
 	"odataconsumption/model/models"
-], function(Controller, JSONModel, Models) {
+],
+function(Controller, JSONModel, Models) {
 	"use strict";
 
 	return Controller.extend("odataconsumption.controller.main", {
@@ -48,6 +49,9 @@ sap.ui.define([
 		_oDataModel: null,
 		_oMeasureModel: null,
 		_oChartModel: null,
+		_oModelTileInput: null,
+		oModel : null,
+		_TileModel : null,
 
 		/**
 		 * This function is automatically called on startup
@@ -64,6 +68,9 @@ sap.ui.define([
 			this._oMeasureModel = new JSONModel();
 			this._oChartModel = new JSONModel();
 			this._oTileModel = new JSONModel();
+			this._oModelTileInput = new JSONModel();
+			this._TileModel = new sap.ui.model.json.JSONModel();
+			var oModel = new sap.ui.model.json.JSONModel();
 
 			// Set models to view
 			this.getView().setModel(this._oViewModel, "viewModel");
@@ -72,33 +79,36 @@ sap.ui.define([
 			this.getView().setModel(this._oMeasureModel, "measure");
 			this.getView().setModel(this._oDataModel, "odata");
 			this.getView().setModel(this._oChartModel, "chart");
-			this.getView().setModel(this._oTileModel, "TileCollection");
+			
+			
 
 			//Creation of JSON model for Tiles 
-			var oModel = new sap.ui.model.json.JSONModel();
-			oModel.loadData("./models/model.json");
-			this.getView().setModel(oModel);
+
+			//oModel.loadData("./models/model.json");
+			this._TileModel.loadData("./models/model.json");
+			//this.getView().setModel(oModel,"GlobalTile");
+			this.getView().setModel(this._TileModel,"GlobalTile");
 			
-			var oModelTileInput;
+			
+
 			//Once the model has been provisoned we can start updating the tiles
 			oModel.attachRequestCompleted(function() {
 
-				//Mapping of the tiles 
-				oModel.setProperty("/TileCollection/0/number", 32);
-
-				//Fetch the odata model and populate the tiles
-				//https://iotmmss0015222403trial.hanatrial.ondemand.com/com.sap.iotservices.mms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1
-
-				var headers = {};
-				headers.Authorization = "Access-Control-Allow-Origin: *.ondemand.com";
-				headers.setHeader = "X-Requested-With: JSONHttpRequest";
-				headers.setHeader = "Content-type: application/x-www-form-urlencoded";
-				
-				var oModelTileInput = new sap.ui.model.json.JSONModel();
-				oModelTileInput.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1");
+				var testModel = new sap.ui.model.json.JSONModel();
+				testModel.attachRequestCompleted(function() {
+					//console.log(testModel.getJSON());
+				oModel.setProperty("/TileCollection/0/number", testModel.getProperty("/d/results/0/C_HUMIDITY"));
+				oModel.setProperty("/TileCollection/1/number", testModel.getProperty("/d/results/0/C_TEMPERATURE"));
+				oModel.setProperty("/TileCollection/2/number", testModel.getProperty("/d/results/0/C_DISTANCE"));
+				oModel.setProperty("/TileCollection/4/number", testModel.getProperty("/d/results/0/C_TILT"));
+				});
+				testModel.attachRequestFailed(function() {
+					console.log(false, "Error handler should not be called when request is aborted via destroy!");
+				});
+				testModel.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
 
 			});
-			
+
 			this.initChart();
 			//BH:Not Needed anymore
 			// Wait until all promises are resolved and set default selection
@@ -116,6 +126,7 @@ sap.ui.define([
 		 * Refesh the RDMS models and adapt the selected device, if necessary.
 		 */
 		onRefreshDevicesPressed: function(evt) {
+
 			var selectedDeviceId = this._oViewModel.getProperty('/selectedDeviceId');
 			Models.loadRDMSModels(this._oDeviceModel, this._oDeviceTypesModel, this._oMeasureModel).then(function(mValues) {
 				// check, if the selected device is still available
@@ -344,6 +355,25 @@ sap.ui.define([
 		 * Reload chart data. If no measures are selected, the call is ignored.
 		 */
 		updateChartData: function() {
+			
+			//Update the tiles
+				var testModel = new sap.ui.model.json.JSONModel();
+				testModel.attachRequestCompleted(function() {
+					console.log('Update of tiles!');
+
+					this.getView().getModel("GlobalTile").setProperty("/TileCollection/0/number", "55");
+					this.getView().getModel("GlobalTile").setProperty("/TileCollection/1/number",  55);
+					this.getView().getModel("GlobalTile").setProperty("/TileCollection/2/number", testModel.getProperty("/d/results/0/C_DISTANCE"));
+					this.getView().getModel("GlobalTile").setProperty("/TileCollection/4/number", testModel.getProperty("/d/results/0/C_TILT"));
+					sap.ui.getCore().getModel("GlobalTile").setProperty("/TileCollection/0/number", "55");
+					sap.ui.getCore().getModel("GlobalTile").refresh(true);
+					this.getView().getModel("GlobalTile").updateBindings();
+				});
+				testModel.attachRequestFailed(function() {
+					console.log(false, "Error handler should not be called when request is aborted via destroy!");
+				});
+				testModel.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
+			
 			// if no measures are selected, skip loading data
 			if (this.getView().byId('measureSelection').getSelectedItems().length < 1) {
 				return;
