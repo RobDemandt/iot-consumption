@@ -89,7 +89,6 @@ function(Controller, JSONModel, Models) {
 			//this.getView().setModel(oModel,"GlobalTile");
 			this.getView().setModel(this._TileModel,"GlobalTile");
 			
-			
 
 			//Once the model has been provisoned we can start updating the tiles
 			oModel.attachRequestCompleted(function() {
