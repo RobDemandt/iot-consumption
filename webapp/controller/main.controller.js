@@ -63,6 +63,7 @@ sap.ui.define([
 			this._oDeviceTypesModel = new JSONModel();
 			this._oMeasureModel = new JSONModel();
 			this._oChartModel = new JSONModel();
+			this._oTileModel = new JSONModel();
 
 			// Set models to view
 			this.getView().setModel(this._oViewModel, "viewModel");
@@ -71,15 +72,44 @@ sap.ui.define([
 			this.getView().setModel(this._oMeasureModel, "measure");
 			this.getView().setModel(this._oDataModel, "odata");
 			this.getView().setModel(this._oChartModel, "chart");
+			this.getView().setModel(this._oTileModel, "TileCollection");
 
+			//Creation of JSON model for Tiles 
+			var oModel = new sap.ui.model.json.JSONModel();
+			oModel.loadData("./models/model.json");
+			this.getView().setModel(oModel);
+			
+			var oModelTileInput;
+			//Once the model has been provisoned we can start updating the tiles
+			oModel.attachRequestCompleted(function() {
+
+				//Mapping of the tiles 
+				oModel.setProperty("/TileCollection/0/number", 32);
+
+				//Fetch the odata model and populate the tiles
+				//https://iotmmss0015222403trial.hanatrial.ondemand.com/com.sap.iotservices.mms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1
+
+				var headers = {};
+				headers.Authorization = "Access-Control-Allow-Origin: *.ondemand.com";
+				headers.setHeader = "X-Requested-With: JSONHttpRequest";
+				headers.setHeader = "Content-type: application/x-www-form-urlencoded";
+
+				oModelTileInput = new sap.ui.model.odata.ODataModel(
+					"https://iotmmss0015222403trial.hanatrial.ondemand.com/com.sap.iotservices.mms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1",
+					true, "s0015222403", "p3nt1um@",headers);
+					
+				alert(oModelTileInput.read());
+
+			});
+			
 			this.initChart();
 			//BH:Not Needed anymore
 			// Wait until all promises are resolved and set default selection
 			//Models.loadRDMSModels(this._oDeviceModel, this._oDeviceTypesModel, this._oMeasureModel).then(function(mValues) {
-				// Get devices
+			// Get devices
 			//	var mDevices = mValues[0];
 			//	if (mDevices.length > 0) {
-					// Set selection to first device
+			// Set selection to first device
 			//		this.changeDevice(mDevices[0].id);
 			//	}
 			//}.bind(this));

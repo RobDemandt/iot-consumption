@@ -1,0 +1,43 @@
+{
+  "TileCollection" : [
+    {
+      "icon" : "factory",
+      "number" : "89",
+      "title" : "Humidity",
+      "numberUnit" : "%",
+      "info" : "Overdue",
+      "infoState" : "Error"
+    },
+    {
+      "icon" : "factory",
+      "number" : "89",
+      "title" : "Temperature",
+      "info" : "Overdue",
+      "numberUnit" : "°C",
+      "infoState" : "Error"
+    },
+    {
+      "icon" : "factory",
+      "title" : "Distance",
+      "number" : "89",
+      "info" : "28 Days Left",
+      "numberUnit" : "CM",
+      "infoState" : "Success"
+    },
+    {
+      "icon" : "factory",
+      "number" : "281",
+      "title" : "Tilt",
+      "numberUnit" : "%",
+      "info" : "1 day ago"
+    },
+    {
+      "icon" : "factory",
+      "number" : "2380",
+      "numberUnit" : "euro",
+      "title" : "X/Y",
+      "info" : "8 days ago"
+    }
+   
+  ]
+}
