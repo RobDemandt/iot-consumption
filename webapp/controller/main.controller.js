@@ -52,6 +52,8 @@ function(Controller, JSONModel, Models) {
 		_oModelTileInput: null,
 		oModel : null,
 		_TileModel : null,
+		testModel : null,
+
 
 		/**
 		 * This function is automatically called on startup
@@ -70,7 +72,8 @@ function(Controller, JSONModel, Models) {
 			this._oTileModel = new JSONModel();
 			this._oModelTileInput = new JSONModel();
 			this._TileModel = new sap.ui.model.json.JSONModel();
-			var oModel = new sap.ui.model.json.JSONModel();
+			this.oModel = new sap.ui.model.json.JSONModel();
+			this.testModel = new sap.ui.model.json.JSONModel();
 
 			// Set models to view
 			this.getView().setModel(this._oViewModel, "viewModel");
@@ -79,11 +82,13 @@ function(Controller, JSONModel, Models) {
 			this.getView().setModel(this._oMeasureModel, "measure");
 			this.getView().setModel(this._oDataModel, "odata");
 			this.getView().setModel(this._oChartModel, "chart");
+			this.oModel = new sap.ui.model.json.JSONModel();
 			
 			
 
-			//Creation of JSON model for Tiles 
 
+<<<<<<< HEAD
+=======
 			oModel.loadData("./models/model.json");
 			//this._TileModel.loadData("./models/model.json");
 			this.getView().setModel(oModel,"GlobalTile");
@@ -107,6 +112,7 @@ function(Controller, JSONModel, Models) {
 				testModel.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
 
 			});
+>>>>>>> branch 'master' of https://github.com/RobDemandt/iot-consumption.git
 
 			this.initChart();
 			//BH:Not Needed anymore
@@ -355,23 +361,29 @@ function(Controller, JSONModel, Models) {
 		 */
 		updateChartData: function() {
 			
-			//Update the tiles
-				var testModel = new sap.ui.model.json.JSONModel();
-				testModel.attachRequestCompleted(function() {
-					console.log('Update of tiles!');
-
-					this.getView().getModel("GlobalTile").setProperty("/TileCollection/0/number", "55");
-					this.getView().getModel("GlobalTile").setProperty("/TileCollection/1/number",  55);
-					this.getView().getModel("GlobalTile").setProperty("/TileCollection/2/number", testModel.getProperty("/d/results/0/C_DISTANCE"));
-					this.getView().getModel("GlobalTile").setProperty("/TileCollection/4/number", testModel.getProperty("/d/results/0/C_TILT"));
-					sap.ui.getCore().getModel("GlobalTile").setProperty("/TileCollection/0/number", "55");
-					sap.ui.getCore().getModel("GlobalTile").refresh(true);
-					this.getView().getModel("GlobalTile").updateBindings();
-				});
-				testModel.attachRequestFailed(function() {
-					console.log(false, "Error handler should not be called when request is aborted via destroy!");
-				});
-				testModel.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
+			//Creation of JSON model for Tiles 
+			
+			
+			console.log("If check" + this._oViewModel.getProperty("/TileCollection/0/number"));
+			if (this._oViewModel.getProperty("/TileCollection/0/number") == undefined) {
+				this._oViewModel.loadData("./models/model.json");
+				//this.getView().setModel(this.oModel,"GlobalTile");
+							//Once the model has been provisoned we can start updating the tiles
+			}else{
+			//console.log("Check1:"+this._oViewModel.getProperty("/TileCollection/0/number"));
+			
+			//console.log("Check2:"+this._oViewModel);
+					//console.log("Check3a");
+					//console.log("Check3b:"+this._oViewModel);
+					
+					this._oViewModel.setProperty("/TileCollection/0/number",this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
+					this._oViewModel.setProperty("/TileCollection/1/number",this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
+					this._oViewModel.setProperty("/TileCollection/2/number", this.testModel.getProperty("/d/results/0/C_DISTANCE"));
+					this._oViewModel.setProperty("/TileCollection/4/number", this.testModel.getProperty("/d/results/0/C_TILT"));
+				this.testModel.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
+				//console.log("Check5");
+			}
+			
 			
 			// if no measures are selected, skip loading data
 			if (this.getView().byId('measureSelection').getSelectedItems().length < 1) {

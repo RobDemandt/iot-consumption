@@ -17,7 +17,8 @@ sap.ui.define([
 				selectedMessageTypeId: "",
 				measures: "value",
 				messageTypes: [],
-				autoRefresh: false
+				autoRefresh: false,
+				TileCollection: []
 			});
 			return oModel;
 		},
