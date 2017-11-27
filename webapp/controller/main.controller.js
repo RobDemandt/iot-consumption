@@ -2,8 +2,7 @@ sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/json/JSONModel",
 	"odataconsumption/model/models"
-],
-function(Controller, JSONModel, Models) {
+], function(Controller, JSONModel, Models) {
 	"use strict";
 
 	return Controller.extend("odataconsumption.controller.main", {
@@ -50,10 +49,9 @@ function(Controller, JSONModel, Models) {
 		_oMeasureModel: null,
 		_oChartModel: null,
 		_oModelTileInput: null,
-		oModel : null,
-		_TileModel : null,
-		testModel : null,
-
+		oModel: null,
+		_TileModel: null,
+		testModel: null,
 
 		/**
 		 * This function is automatically called on startup
@@ -82,30 +80,91 @@ function(Controller, JSONModel, Models) {
 			this.getView().setModel(this._oMeasureModel, "measure");
 			this.getView().setModel(this._oDataModel, "odata");
 			this.getView().setModel(this._oChartModel, "chart");
+			this.getView().setModel(this._oTileModel, "TileModel");
 			this.oModel = new sap.ui.model.json.JSONModel();
-			
-			
 
-			this.oModel.loadData("./models/model.json");
+			//Setup the tiles
+			this._oTileModel.loadData("./models/model.json");
 
 			this.initChart();
-			//BH:Not Needed anymore
+
+			//Start the auto-update
+			this.intervalId = setInterval(this.updateChartData.bind(this), this.CHART_UPDATE_INTERVAL);
+			this.updateChartData();
+
+			//var oTileContainer = this.getView().byId("container"); //Get hold of TileContainer
+			//this._oTileModel.addEventDelegate({
+			//  onAfterRendering: function() {
+			//    //Get Aggregation Tiles of tile container
+			//    var oTiles = this.getAggregation("tiles");
+			//    //First Tile
+			//    var oApproveTile = oTiles[0].getId();
+			//    sap.ui.getCore().byId(oApproveTile).attachPress(
+			//      function(oEvent) {
+			//        var app = sap.ui.getCore().byId("mainApp");
+			//        var oContext = oEvent.getSource().getBindingContext();
+			//        var page = app.getPage("DetailPage");
+			//        if (page === null) {
+			//          page = new sap.ui.xmlview("DetailPage", "sap.ui.demo.wt.Detail");
+			//          app.addPage(page);
+			//        }
+			//          page.setBindingContext(oContext);
+			//        app.to(page, "slide", {});
+			//      });
+
+			//  }
+			//}, this._oTileModel);
+
 			// Wait until all promises are resolved and set default selection
-			//Models.loadRDMSModels(this._oDeviceModel, this._oDeviceTypesModel, this._oMeasureModel).then(function(mValues) {
-			// Get devices
-			//	var mDevices = mValues[0];
-			//	if (mDevices.length > 0) {
-			// Set selection to first device
-			//		this.changeDevice(mDevices[0].id);
-			//	}
-			//}.bind(this));
+			Models.loadRDMSModels(this._oDeviceModel, this._oDeviceTypesModel, this._oMeasureModel).then(function(mValues) {
+				// Get devices
+				var mDevices = mValues[0];
+				if (mDevices.length > 0) {
+					// Set selection to first device
+					this.changeDevice(mDevices[0].id);
+				}
+
+			}.bind(this));
+		},
+
+		pressKepesertaan: function(oEvent) {
+			console.log("Press function");
+			
+			////Find which tile was pressed
+			var sPath = oEvent.getSource().getBindingContext("TileModel").getPath();
+			var oContext = this._oTileModel.getProperty(sPath);
+			console.log(JSON.stringify(oContext['title']));
+			
+			if (oContext['title'] === "Temperature"){
+				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("2");
+			} 
+			
+			if (oContext['title'] === "Humidity"){
+				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("3");
+			} 
+			
+			if (oContext['title'] === "Distance"){
+				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("4");
+			} 
+			
+			if (oContext['title'] === "Tilt"){
+				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("5");
+			} 
+			
+			if (oContext['title'] === "X/Y"){
+				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("6");
+			} 
+			
+			//Always Update the chart
+			this.setChart();
+
+			
 		},
 
 		/**
 		 * Refesh the RDMS models and adapt the selected device, if necessary.
 		 */
 		onRefreshDevicesPressed: function(evt) {
-
 			var selectedDeviceId = this._oViewModel.getProperty('/selectedDeviceId');
 			Models.loadRDMSModels(this._oDeviceModel, this._oDeviceTypesModel, this._oMeasureModel).then(function(mValues) {
 				// check, if the selected device is still available
@@ -159,6 +218,8 @@ function(Controller, JSONModel, Models) {
 		 * Adapt value state of the measure selection control and redraw the chart according to the selected measures.
 		 */
 		onMeasureSelectionChanged: function(evt) {
+
+			console.log(evt);
 			if (evt.getSource().getSelectedItems().length === 0) {
 				evt.getSource().setValueState(sap.ui.core.ValueState.Error);
 			} else {
@@ -334,31 +395,13 @@ function(Controller, JSONModel, Models) {
 		 * Reload chart data. If no measures are selected, the call is ignored.
 		 */
 		updateChartData: function() {
-			
-			//Creation of JSON model for Tiles 
-			
-			
-			console.log("If check" + this._oViewModel.getProperty("/TileCollection/0/number"));
-			if (this._oViewModel.getProperty("/TileCollection/0/number") == undefined) {
-				this._oViewModel.loadData("./models/model.json");
-				//this.getView().setModel(this.oModel,"GlobalTile");
-							//Once the model has been provisoned we can start updating the tiles
-			}else{
-			//console.log("Check1:"+this._oViewModel.getProperty("/TileCollection/0/number"));
-			
-			//console.log("Check2:"+this._oViewModel);
-					//console.log("Check3a");
-					//console.log("Check3b:"+this._oViewModel);
-					
-					this._oViewModel.setProperty("/TileCollection/0/number",this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
-					this._oViewModel.setProperty("/TileCollection/1/number",this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
-					this._oViewModel.setProperty("/TileCollection/2/number", this.testModel.getProperty("/d/results/0/C_DISTANCE"));
-					this._oViewModel.setProperty("/TileCollection/4/number", this.testModel.getProperty("/d/results/0/C_TILT"));
-				this.testModel.loadData("/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
-				//console.log("Check5");
-			}
-			
-			
+
+			this._oTileModel.setProperty("/TileCollection/0/number", this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
+			this._oTileModel.setProperty("/TileCollection/1/number", this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
+			this._oTileModel.setProperty("/TileCollection/2/number", this.testModel.getProperty("/d/results/0/C_DISTANCE"));
+			this._oTileModel.setProperty("/TileCollection/4/number", this.testModel.getProperty("/d/results/0/C_TILT"));
+			this.testModel.loadData(
+				"/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
 			// if no measures are selected, skip loading data
 			if (this.getView().byId('measureSelection').getSelectedItems().length < 1) {
 				return;
@@ -366,7 +409,7 @@ function(Controller, JSONModel, Models) {
 
 			var sDeviceId = this._oViewModel.getProperty('/selectedDeviceId');
 			var sMessageTypeId = this._oViewModel.getProperty('/selectedMessageTypeId').toUpperCase();
-
+			console.log(sMessageTypeId);
 			var shownValueCount = this._oViewModel.getProperty('/shownValueCount');
 			this._oDataModel.read("/T_IOT_" + sMessageTypeId, {
 				urlParameters: {

@@ -15,16 +15,16 @@
 						</content>
 					</Panel>
 
-					<TileContainer id="container" tileDelete="handleTileDelete" tiles="{viewModel>/TileCollection}" size="M" height="300px">
-						<StandardTile icon="sap-icon://{viewModel>icon}" type="{viewModel>type}" number="{viewModel>number}" numberUnit="{viewModel>numberUnit}" title="{viewModel>title}" info="{viewModel>info}"
-							infoState="{viewModel>infoState}"/>
+					<TileContainer id="container" tileDelete="handleTileDelete" tiles="{TileModel>/TileCollection}" size="M" height="300px">
+						<StandardTile id="tile" icon="sap-icon://{TileModel>icon}" type="{TileModel>type}" number="{TileModel>number}" numberUnit="{TileModel>numberUnit}" title="{TileModel>title}" info="{TileModel>info}" press="pressKepesertaan"
+							infoState="{TileModel>infoState}"/>
 					</TileContainer>
 					<layout:FixFlex id="chartFixFlex" minFlexSize="250">
 						<layout:fixContent>
 							<Panel xmlns="sap.m" width="100%">
 								<HBox>
 									<form:SimpleForm maxContainerCols="2" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="1" emptySpanM="1" columnsL="1"
-										columnsM="1" editable="true" class="editableForm" backgroundDesign="Transparent">
+										columnsM="1" editable="true" class="editableForm" backgroundDesign="Transparent" visible="false" >
 										<form:content>
 											<Label text="{i18n>LBL_DEVICES}" required="true"/>
 											<HBox width="100%">
@@ -55,7 +55,7 @@
 										</form:layoutData>
 									</form:SimpleForm>
 									<form:SimpleForm maxContainerCols="2" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="0" emptySpanM="0" columnsL="1"
-										columnsM="1" editable="true" class="editableForm" backgroundDesign="Transparent">
+										columnsM="1" editable="true" class="editableForm" backgroundDesign="Transparent"  visible="false">
 										<form:content>
 											<Label text="{i18n>LBL_AUTO_REFRESH_CHART}"/>
 											<Switch id="autoRefreshSwitch" state="{viewModel>/autoRefresh}" change="onAutoRefreshChanged"/>
@@ -75,13 +75,6 @@
 						</layout:fixContent>
 						<layout:flexContent>
 							<viz:VizFrame id="idVizFrame" height="100%" width="100%" vizType="timeseries_line" uiConfig="{applicationSet:'fiori'}">
-								<viz:feeds>
-									<viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="timestamp"/>
-								</viz:feeds>
-							</viz:VizFrame>
-						</layout:flexContent>
-						<layout:flexContent>
-							<viz:VizFrame id="idVizFrame2" height="100%" width="100%" vizType="timeseries_line" uiConfig="{applicationSet:'fiori'}">
 								<viz:feeds>
 									<viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="timestamp"/>
 								</viz:feeds>
