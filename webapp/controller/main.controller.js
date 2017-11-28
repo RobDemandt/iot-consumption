@@ -91,7 +91,7 @@ sap.ui.define([
 			//Start the auto-update
 			this.intervalId = setInterval(this.updateChartData.bind(this), this.CHART_UPDATE_INTERVAL);
 			this.updateChartData();
-
+		
 			//var oTileContainer = this.getView().byId("container"); //Get hold of TileContainer
 			//this._oTileModel.addEventDelegate({
 			//  onAfterRendering: function() {
@@ -395,13 +395,28 @@ sap.ui.define([
 		 * Reload chart data. If no measures are selected, the call is ignored.
 		 */
 		updateChartData: function() {
-
+			console.log("Update chart data"+this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
 			this._oTileModel.setProperty("/TileCollection/0/number", this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
 			this._oTileModel.setProperty("/TileCollection/1/number", this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
 			this._oTileModel.setProperty("/TileCollection/2/number", this.testModel.getProperty("/d/results/0/C_DISTANCE"));
 			this._oTileModel.setProperty("/TileCollection/4/number", this.testModel.getProperty("/d/results/0/C_TILT"));
 			this.testModel.loadData(
 				"/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
+			
+			//Set the info state's of the tiles
+			                if (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") >10) {
+                                                               
+                                                               (this._oTileModel.setProperty("/TileCollection/1/infoState", "Error"));
+                                                               
+                                                               } else {
+                                                                                                                             
+                                                               (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") <10)
+                                                               
+                                                               (this._oTileModel.setProperty("/TileCollection/1/infoState", "Warning"));
+                                                               
+                                                               }
+
+			
 			// if no measures are selected, skip loading data
 			if (this.getView().byId('measureSelection').getSelectedItems().length < 1) {
 				return;

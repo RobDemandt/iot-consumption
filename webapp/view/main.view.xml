@@ -33,7 +33,7 @@
 						<layout:fixContent>
 							<Panel xmlns="sap.m" width="100%">
 								<HBox>
-									<form:SimpleForm maxContainerCols="2" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="1" emptySpanM="1" columnsL="1" columnsM="1" editable="true" class="editableForm" backgroundDesign="Transparent">
+									<form:SimpleForm maxContainerCols="2" visible="false" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="1" emptySpanM="1" columnsL="1" columnsM="1" editable="true" class="editableForm" backgroundDesign="Transparent">
 										<form:content>
 											<Label text="{i18n>LBL_DEVICES}" required="true"/>
 											<HBox width="100%">
