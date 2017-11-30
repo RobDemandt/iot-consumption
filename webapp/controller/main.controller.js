@@ -1,8 +1,18 @@
 sap.ui.define([
 	"sap/ui/core/mvc/Controller",
 	"sap/ui/model/json/JSONModel",
-	"odataconsumption/model/models"
-], function(Controller, JSONModel, Models) {
+	"odataconsumption/model/models",
+	'sap/m/Button',
+	'sap/m/Dialog',
+	'sap/m/Label',
+	'sap/m/MessageToast',
+	'sap/m/Text',
+	'sap/m/TextArea',
+	'sap/ui/core/mvc/Controller',
+	'sap/ui/layout/HorizontalLayout',
+	'sap/ui/layout/VerticalLayout',
+	'sap/ui/model/Model'
+], function(Controller, JSONModel, Models, Button, Dialog, Label, MessageToast, Text, TextArea, HorizontalLayout, VerticalLayout) {
 	"use strict";
 
 	return Controller.extend("odataconsumption.controller.main", {
@@ -39,7 +49,7 @@ sap.ui.define([
 		/**
 		 * The update interval of the chart, if auto refresh is enabled.
 		 */
-		CHART_UPDATE_INTERVAL: 1000,
+		CHART_UPDATE_INTERVAL: 2000,
 
 		_intervalId: null,
 		_oViewModel: null,
@@ -81,6 +91,7 @@ sap.ui.define([
 			this.getView().setModel(this._oDataModel, "odata");
 			this.getView().setModel(this._oChartModel, "chart");
 			this.getView().setModel(this._oTileModel, "TileModel");
+			this.getView().setModel(this.testModel, "TestModel");
 			this.oModel = new sap.ui.model.json.JSONModel();
 
 			//Setup the tiles
@@ -127,38 +138,103 @@ sap.ui.define([
 			}.bind(this));
 		},
 
+		pressReportIssue: function(oEvent) {
+
+			//Report popop button	
+			var dialog = new Dialog({
+				title: 'Send Maintenance Notification to S/4HANA',
+				type: 'Message',
+				content: [
+					new HorizontalLayout({
+						content: [
+							new VerticalLayout({
+								width: '120px',
+								content: [
+									new Text({
+										text: 'Type: '
+									}),
+									new Text({
+										text: 'Delivery:'
+									}),
+									new Text({
+										text: 'Items count: '
+									})
+								]
+							}),
+							new VerticalLayout({
+								content: [
+									new Text({
+										text: 'Shopping Cart'
+									}),
+									new Text({
+										text: 'Jun 26, 2013'
+									}),
+									new Text({
+										text: '2'
+									})
+								]
+							})
+						]
+					}),
+					new TextArea('confirmDialogTextarea', {
+						width: '100%',
+						placeholder: 'Add description (optional)'
+					})
+				],
+				beginButton: new Button({
+					text: 'Submit',
+					press: function() {
+						var sText = sap.ui.getCore().byId('confirmDialogTextarea').getValue();
+						MessageToast.show('Maitenance notification is send in S/4HANA.');
+						dialog.close();
+					}
+				}),
+				endButton: new Button({
+					text: 'Cancel',
+					press: function() {
+						dialog.close();
+					}
+				}),
+				afterClose: function() {
+					dialog.destroy();
+				}
+			});
+
+			dialog.open();
+
+		},
+
 		pressKepesertaan: function(oEvent) {
 			console.log("Press function");
-			
+
 			////Find which tile was pressed
 			var sPath = oEvent.getSource().getBindingContext("TileModel").getPath();
 			var oContext = this._oTileModel.getProperty(sPath);
 			console.log(JSON.stringify(oContext['title']));
-			
-			if (oContext['title'] === "Temperature"){
+
+			if (oContext['title'] === "Temperature") {
 				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("2");
-			} 
-			
-			if (oContext['title'] === "Humidity"){
+			}
+
+			if (oContext['title'] === "Humidity") {
 				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("3");
-			} 
-			
-			if (oContext['title'] === "Distance"){
+			}
+
+			if (oContext['title'] === "Distance") {
 				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("4");
-			} 
-			
-			if (oContext['title'] === "Tilt"){
+			}
+
+			if (oContext['title'] === "Tilt") {
 				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("5");
-			} 
-			
-			if (oContext['title'] === "X/Y"){
+			}
+
+			if (oContext['title'] === "X/Y") {
 				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("6");
-			} 
-			
+			}
+
 			//Always Update the chart
 			this.setChart();
 
-			
 		},
 
 		/**
@@ -395,28 +471,55 @@ sap.ui.define([
 		 * Reload chart data. If no measures are selected, the call is ignored.
 		 */
 		updateChartData: function() {
+
 			console.log("Update chart data"+this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
 			this._oTileModel.setProperty("/TileCollection/0/number", this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
 			this._oTileModel.setProperty("/TileCollection/1/number", this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
 			this._oTileModel.setProperty("/TileCollection/2/number", this.testModel.getProperty("/d/results/0/C_DISTANCE"));
 			this._oTileModel.setProperty("/TileCollection/4/number", this.testModel.getProperty("/d/results/0/C_TILT"));
+
 			this.testModel.loadData(
 				"/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
+
+			this.testModel.attachRequestCompleted(function(oEvent) {
+				if (!oEvent.getParameter('success')) {
+					console.log("Odata read error!");
+					MessageToast.show('Connectivity error with database server (ODATA)');
+				}
+			});
 			
-			//Set the info state's of the tiles
-			                if (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") >10) {
-                                                               
-                                                               (this._oTileModel.setProperty("/TileCollection/1/infoState", "Error"));
-                                                               
-                                                               } else {
-                                                                                                                             
-                                                               (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") <10)
-                                                               
-                                                               (this._oTileModel.setProperty("/TileCollection/1/infoState", "Warning"));
-                                                               
-                                                               }
+
+			//Change the infostate for the temperatur tile
+
+			//Change the infostate for the Humidity tile
+			if (this.testModel.getProperty("/d/results/0/C_HUMIDITY") > 70) {
+				(this._oTileModel.setProperty("/TileCollection/0/infoState", "Error"));
+				(this._oTileModel.setProperty("/TileCollection/0/info", "Error"));
+			} else {
+				(this._oTileModel.setProperty("/TileCollection/0/infoState", "Success"));
+				(this._oTileModel.setProperty("/TileCollection/0/info", "OK"));
+			}
+
+			//Change the infostate for the Distance tile
+			if (this.testModel.getProperty("/d/results/0/C_DISTANCE") > 70) {
+				(this._oTileModel.setProperty("/TileCollection/2/infoState", "Error"));
+				(this._oTileModel.setProperty("/TileCollection/2/info", "Error"));
+			} else {
+				(this._oTileModel.setProperty("/TileCollection/2/infoState", "Success"));
+				(this._oTileModel.setProperty("/TileCollection/2/info", "OK"));
+			}
+
+			//Change the infostate for the Distance tile
+			if (this.testModel.getProperty("/d/results/0/C_TILT") > 70) {
+				(this._oTileModel.setProperty("/TileCollection/3/infoState", "Error"));
+				(this._oTileModel.setProperty("/TileCollection/3/info", "Error"));
+			} else {
+				(this._oTileModel.setProperty("/TileCollection/3/infoState", "Success"));
+				(this._oTileModel.setProperty("/TileCollection/3/info", "OK"));
+			}
 
 			
+
 			// if no measures are selected, skip loading data
 			if (this.getView().byId('measureSelection').getSelectedItems().length < 1) {
 				return;

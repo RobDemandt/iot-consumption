@@ -5,14 +5,14 @@
       "number" : "00",
       "title" : "Humidity",
       "numberUnit" : "%",
-      "info" : "Overdue",
+      "info" : "OK",
       "infoState" : "Error"
     },
     {
       "icon" : "factory",
       "number" : "00",
       "title" : "Temperature",
-      "info" : "Overdue",
+      "info" : "OK",
       "numberUnit" : "°C",
       "infoState" : "Error"
     },
