@@ -26,10 +26,11 @@
     },
     {
       "icon" : "factory",
-      "number" : "00",
+      "number" : "↑",
       "title" : "Tilt",
-      "numberUnit" : "%",
-      "info" : "1 day ago"
+      "numberUnit" : "",
+      "info" : "OK",
+      "infoState" : "Success"
     },
     {
       "icon" : "factory",

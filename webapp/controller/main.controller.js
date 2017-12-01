@@ -49,7 +49,7 @@ sap.ui.define([
 		/**
 		 * The update interval of the chart, if auto refresh is enabled.
 		 */
-		CHART_UPDATE_INTERVAL: 2000,
+		CHART_UPDATE_INTERVAL: 1000,
 
 		_intervalId: null,
 		_oViewModel: null,
@@ -224,9 +224,9 @@ sap.ui.define([
 				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("4");
 			}
 
-			if (oContext['title'] === "Tilt") {
-				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("5");
-			}
+			//if (oContext['title'] === "Tilt") {
+			//	var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("5");
+			//}
 
 			if (oContext['title'] === "X/Y") {
 				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("6");
@@ -473,8 +473,8 @@ sap.ui.define([
 		updateChartData: function() {
 
 			console.log("Update chart data"+this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
-			this._oTileModel.setProperty("/TileCollection/0/number", this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
-			this._oTileModel.setProperty("/TileCollection/1/number", this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
+			this._oTileModel.setProperty("/TileCollection/1/number", this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
+			this._oTileModel.setProperty("/TileCollection/0/number", this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
 			this._oTileModel.setProperty("/TileCollection/2/number", this.testModel.getProperty("/d/results/0/C_DISTANCE"));
 			this._oTileModel.setProperty("/TileCollection/4/number", this.testModel.getProperty("/d/results/0/C_TILT"));
 
@@ -490,7 +490,13 @@ sap.ui.define([
 			
 
 			//Change the infostate for the temperatur tile
-
+						if (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") > 30) {
+				(this._oTileModel.setProperty("/TileCollection/1/infoState", "Error"));
+				(this._oTileModel.setProperty("/TileCollection/1/info", "Error"));
+			} else {
+				(this._oTileModel.setProperty("/TileCollection/1/infoState", "Success"));
+				(this._oTileModel.setProperty("/TileCollection/1/info", "OK"));
+			}
 			//Change the infostate for the Humidity tile
 			if (this.testModel.getProperty("/d/results/0/C_HUMIDITY") > 70) {
 				(this._oTileModel.setProperty("/TileCollection/0/infoState", "Error"));
@@ -509,14 +515,14 @@ sap.ui.define([
 				(this._oTileModel.setProperty("/TileCollection/2/info", "OK"));
 			}
 
-			//Change the infostate for the Distance tile
-			if (this.testModel.getProperty("/d/results/0/C_TILT") > 70) {
-				(this._oTileModel.setProperty("/TileCollection/3/infoState", "Error"));
-				(this._oTileModel.setProperty("/TileCollection/3/info", "Error"));
-			} else {
-				(this._oTileModel.setProperty("/TileCollection/3/infoState", "Success"));
-				(this._oTileModel.setProperty("/TileCollection/3/info", "OK"));
-			}
+			// //Change the infostate for the Distance tile
+			// if (this.testModel.getProperty("/d/results/0/C_TILT") > 70) {
+			// 	(this._oTileModel.setProperty("/TileCollection/3/infoState", "Error"));
+			// 	(this._oTileModel.setProperty("/TileCollection/3/info", "Error"));
+			// } else {
+			// 	(this._oTileModel.setProperty("/TileCollection/3/infoState", "Success"));
+			// 	(this._oTileModel.setProperty("/TileCollection/3/info", "OK"));
+			// }
 
 			
 
