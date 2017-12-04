@@ -27,7 +27,7 @@
     {
       "icon" : "factory",
       "number" : "↑",
-      "title" : "Tilt",
+      "title" : "Orientation",
       "numberUnit" : "",
       "info" : "OK",
       "infoState" : "Success"

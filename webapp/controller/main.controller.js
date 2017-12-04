@@ -102,29 +102,6 @@ sap.ui.define([
 			//Start the auto-update
 			this.intervalId = setInterval(this.updateChartData.bind(this), this.CHART_UPDATE_INTERVAL);
 			this.updateChartData();
-		
-			//var oTileContainer = this.getView().byId("container"); //Get hold of TileContainer
-			//this._oTileModel.addEventDelegate({
-			//  onAfterRendering: function() {
-			//    //Get Aggregation Tiles of tile container
-			//    var oTiles = this.getAggregation("tiles");
-			//    //First Tile
-			//    var oApproveTile = oTiles[0].getId();
-			//    sap.ui.getCore().byId(oApproveTile).attachPress(
-			//      function(oEvent) {
-			//        var app = sap.ui.getCore().byId("mainApp");
-			//        var oContext = oEvent.getSource().getBindingContext();
-			//        var page = app.getPage("DetailPage");
-			//        if (page === null) {
-			//          page = new sap.ui.xmlview("DetailPage", "sap.ui.demo.wt.Detail");
-			//          app.addPage(page);
-			//        }
-			//          page.setBindingContext(oContext);
-			//        app.to(page, "slide", {});
-			//      });
-
-			//  }
-			//}, this._oTileModel);
 
 			// Wait until all promises are resolved and set default selection
 			Models.loadRDMSModels(this._oDeviceModel, this._oDeviceTypesModel, this._oMeasureModel).then(function(mValues) {
@@ -472,12 +449,13 @@ sap.ui.define([
 		 */
 		updateChartData: function() {
 
-			console.log("Update chart data"+this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
+			console.log("Update chart data" + this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
 			this._oTileModel.setProperty("/TileCollection/1/number", this.testModel.getProperty("/d/results/0/C_TEMPERATURE"));
 			this._oTileModel.setProperty("/TileCollection/0/number", this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
 			this._oTileModel.setProperty("/TileCollection/2/number", this.testModel.getProperty("/d/results/0/C_DISTANCE"));
 			this._oTileModel.setProperty("/TileCollection/4/number", this.testModel.getProperty("/d/results/0/C_TILT"));
-
+		
+			
 			this.testModel.loadData(
 				"/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
 
@@ -485,12 +463,19 @@ sap.ui.define([
 				if (!oEvent.getParameter('success')) {
 					console.log("Odata read error!");
 					MessageToast.show('Connectivity error with database server (ODATA)');
+					CHART_UPDATE_INTERVAL: 4000;
+				}else{
+					CHART_UPDATE_INTERVAL: 1000;
 				}
 			});
-			
 
 			//Change the infostate for the temperatur tile
-						if (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") > 30) {
+			if (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") > 30) {
+				//Create maintence notification automatically
+				if (this._oTileModel.getProperty("/TileCollection/1/infoState") != "Error") {
+					console.log('Automatic creation of maintenance notification');
+					MessageToast.show('Temperature error detected, maintenance notification created in S/4HANA.');
+				}
 				(this._oTileModel.setProperty("/TileCollection/1/infoState", "Error"));
 				(this._oTileModel.setProperty("/TileCollection/1/info", "Error"));
 			} else {
@@ -514,17 +499,6 @@ sap.ui.define([
 				(this._oTileModel.setProperty("/TileCollection/2/infoState", "Success"));
 				(this._oTileModel.setProperty("/TileCollection/2/info", "OK"));
 			}
-
-			// //Change the infostate for the Distance tile
-			// if (this.testModel.getProperty("/d/results/0/C_TILT") > 70) {
-			// 	(this._oTileModel.setProperty("/TileCollection/3/infoState", "Error"));
-			// 	(this._oTileModel.setProperty("/TileCollection/3/info", "Error"));
-			// } else {
-			// 	(this._oTileModel.setProperty("/TileCollection/3/infoState", "Success"));
-			// 	(this._oTileModel.setProperty("/TileCollection/3/info", "OK"));
-			// }
-
-			
 
 			// if no measures are selected, skip loading data
 			if (this.getView().byId('measureSelection').getSelectedItems().length < 1) {

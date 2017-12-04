@@ -7,34 +7,45 @@
 								<Panel height="350px">
 				<headerToolbar>
 					<Toolbar>
-						<Title level="H2" text="Production Machine 1"/>
+						<Title level="H2" text="Lego Production Machine 01"/>
 					</Toolbar>
 				</headerToolbar>
 			
 						<content>
 						    <HBox width="100%" id="__hbox2" height="250px">
 						        <items>
-						            <VBox width="30%" direction="Column" id="__vbox0" height="250px">
+						            <VBox width="40%" direction="Column" id="__vbox0" height="250px">
 						                <items>
 						                    <IconTabBar selectedKey="__filter1" id="__bar1" backgroundDesign="Transparent" headerackgroundDesign="Transparent" headerBackgroundDesign="Transparent">
 						                        <items>
 						                            <IconTabFilter text="Information" icon="sap-icon://task" iconColor="Critical" id="__filter1">
 						                                <content>
-						                                    <Text text="Lego Robot" id="__text2"/>
+						                                	<l:VerticalLayout>
+						                                    <Text text="Name:Lego Robot" id="__text2"/>
+						                                    <Text text="Manufacturor:Lego Group" id="__text22"/>
+						                                    <Text text="Revision: V8" id="__text23"/>
+						                                    <Text text="Installation date: 21-10-2017" id="__text24"/>
+						                                    </l:VerticalLayout>
 						                                </content>
 						                            </IconTabFilter>
 						                            <IconTabFilter text="Location" icon="sap-icon://shipping-status" iconColor="Positive" id="__filter2">
 						                            <content>
-						                                <Text text="Spain" id="__text1"/>
+						                            	<l:VerticalLayout>
+						                                <Text text="Country: Spain" id="__text1"/>
+						                                <Text text="Plant: Madrid (ZZES)" id="__text3"/>
+						                                <Text text="Floor: Second floor" id="__text4"/>
+						                                <Text text="Production Line: C" id="__text5"/>
+						                                <Text text="Work center: ZZA01" id="__text6"/>
+						                                </l:VerticalLayout>
 						                            </content>
 						                            </IconTabFilter></items>
 						                    </IconTabBar>
 						                </items>
 						            </VBox>
-						            <VBox width="70%" direction="Column" id="__vbox1" height="250px" alignItems="End">
+						            <VBox width="60%" direction="Column" id="__vbox1" height="250px" alignItems="End">
 						                <items>
 						                	
-						                    <Image title="test" width="250px" height="200px" id="__image1" src="https://i.imgur.com/GbQnKZs.png" activeSrc="https://www.freepik.com/free-photo/excavator-on-a-land-under-construction_1162876.htm"/>
+						                    <Image title="test" width="300px" height="250px" id="__image1" src="https://i.imgur.com/GbQnKZs.png" activeSrc="https://www.freepik.com/free-photo/excavator-on-a-land-under-construction_1162876.htm"/>
 						                </items>
 						            </VBox>
 						        </items>
