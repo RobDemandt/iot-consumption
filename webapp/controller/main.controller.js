@@ -125,7 +125,7 @@ sap.ui.define([
 					new HorizontalLayout({
 						content: [
 							new VerticalLayout({
-								width: '120px',
+								width: '100px',
 								content: [
 									new Text({
 										text: 'Type: '
@@ -150,10 +150,12 @@ sap.ui.define([
 										text: '2'
 									})
 								]
+							}), new Text({
+								text: 'Shopping Cart'
 							})
 						]
 					}),
-					new TextArea('confirmDialogTextarea', {
+					new TextArea('confirmDialogTextarea3', {
 						width: '100%',
 						placeholder: 'Add description (optional)'
 					})
@@ -163,6 +165,24 @@ sap.ui.define([
 					press: function() {
 						var sText = sap.ui.getCore().byId('confirmDialogTextarea').getValue();
 						MessageToast.show('Maitenance notification is send in S/4HANA.');
+
+						//Send Notification actually to S/4HANA
+
+						var oModel = new sap.ui.model.json.JSONModel();
+						var aData = jQuery.ajax({
+							type: "GET",
+							contentType: "application/json",
+							url: "http://sapm04.ibsolution.local:50000/demo.sap.com~d337_resttest_web/rest/todo/init/",
+							dataType: "json",
+							async: false,
+							success: function(data, textStatus, jqXHR) {
+								oModel.setData({
+									modelData: data
+								});
+								alert("success to post");
+							}
+
+						});
 						dialog.close();
 					}
 				}),
@@ -205,9 +225,9 @@ sap.ui.define([
 			//	var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("5");
 			//}
 
-			if (oContext['title'] === "X/Y") {
-				var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("6");
-			}
+			//	if (oContext['title'] === "X/Y") {
+			//	var oSelectedItems = this.getView().byId('measureSelection').setSelectedKeys("6");
+			//	}
 
 			//Always Update the chart
 			this.setChart();
@@ -454,8 +474,7 @@ sap.ui.define([
 			this._oTileModel.setProperty("/TileCollection/0/number", this.testModel.getProperty("/d/results/0/C_HUMIDITY"));
 			this._oTileModel.setProperty("/TileCollection/2/number", this.testModel.getProperty("/d/results/0/C_DISTANCE"));
 			this._oTileModel.setProperty("/TileCollection/4/number", this.testModel.getProperty("/d/results/0/C_TILT"));
-		
-			
+
 			this.testModel.loadData(
 				"/iotmms/v1/api/http/app.svc/SYSTEM.T_IOT_4AFD1B5B48B759BD3410?$format=json&$top=1&$orderby=G_CREATED%20desc");
 
@@ -464,7 +483,7 @@ sap.ui.define([
 					console.log("Odata read error!");
 					MessageToast.show('Connectivity error with database server (ODATA)');
 					CHART_UPDATE_INTERVAL: 4000;
-				}else{
+				} else {
 					CHART_UPDATE_INTERVAL: 1000;
 				}
 			});

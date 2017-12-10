@@ -1,10 +1,10 @@
 <core:View xmlns:core="sap.ui.core" xmlns:f="sap.ui.layout.form" xmlns:l="sap.ui.layout" xmlns:mvc="sap.ui.core.mvc" xmlns="sap.m" xmlns:html="http://www.w3.org/1999/xhtml" xmlns:layout="sap.ui.layout" xmlns:form="sap.ui.layout.form" xmlns:viz="sap.viz.ui5.controls" xmlns:viz.feeds="sap.viz.ui5.controls.common.feeds" xmlns:viz.data="sap.viz.ui5.data" controllerName="odataconsumption.controller.main" displayBlock="true" class="sapUiSizeCompact" height="100%">
 	<App>
 		<pages>
-			<Page title="IoT in a Suitecase - S/4HANA and IoT Workshop Example">
+			<Page title="Leonardo in a Suitecase" enableScrolling="False" >
 				<content>
 					
-								<Panel height="350px">
+								<Panel height="310px">
 				<headerToolbar>
 					<Toolbar>
 						<Title level="H2" text="Lego Production Machine 01"/>
@@ -12,9 +12,9 @@
 				</headerToolbar>
 			
 						<content>
-						    <HBox width="100%" id="__hbox2" height="250px">
+						    <HBox width="100%" id="__hbox2" height="200px">
 						        <items>
-						            <VBox width="40%" direction="Column" id="__vbox0" height="250px">
+						            <VBox width="40%" direction="Column" id="__vbox0" height="200px">
 						                <items>
 						                    <IconTabBar selectedKey="__filter1" id="__bar1" backgroundDesign="Transparent" headerackgroundDesign="Transparent" headerBackgroundDesign="Transparent">
 						                        <items>
@@ -42,7 +42,7 @@
 						                    </IconTabBar>
 						                </items>
 						            </VBox>
-						            <VBox width="60%" direction="Column" id="__vbox1" height="250px" alignItems="End">
+						            <VBox width="60%" direction="Column" id="__vbox1" height="200px" alignItems="End">
 						                <items>
 						                	
 						                    <Image title="test" width="300px" height="250px" id="__image1" src="https://i.imgur.com/GbQnKZs.png" activeSrc="https://www.freepik.com/free-photo/excavator-on-a-land-under-construction_1162876.htm"/>
@@ -53,12 +53,12 @@
 						</content>
 
 			</Panel>
-					<TileContainer id="container" tileDelete="handleTileDelete" tiles="{TileModel>/TileCollection}" size="M" height="300px">
+					<TileContainer id="container" tileDelete="handleTileDelete" tiles="{TileModel>/TileCollection}" size="M" height="270px">
 						<StandardTile id="tile" icon="sap-icon://{TileModel>icon}" type="{TileModel>type}" number="{TileModel>number}" numberUnit="{TileModel>numberUnit}" title="{TileModel>title}" info="{TileModel>info}" press="pressKepesertaan" infoState="{TileModel>infoState}"/>
 					</TileContainer>
-					<layout:FixFlex id="chartFixFlex" minFlexSize="250">
+					<layout:FixFlex id="chartFixFlex" minFlexSize="200">
 						<layout:fixContent>
-							<Panel xmlns="sap.m" width="100%" visible="false">
+							<Panel xmlns="sap.m" width="100%" visible="false" height="250px">
 								<HBox>
 									<form:SimpleForm maxContainerCols="2" visible="false" layout="ResponsiveGridLayout" labelSpanL="3" labelSpanM="3" emptySpanL="1" emptySpanM="1" columnsL="1" columnsM="1" editable="true" class="editableForm" backgroundDesign="Transparent">
 										<form:content>
@@ -103,7 +103,7 @@
 							</Panel>
 						</layout:fixContent>
 						<layout:flexContent>
-							<viz:VizFrame id="idVizFrame" height="50%" width="100%" vizType="timeseries_line" uiConfig="{applicationSet:'fiori'}">
+							<viz:VizFrame hidden="True" id="idVizFrame" height="38%" width="100%" vizType="timeseries_line" uiConfig="{applicationSet:'fiori'}">
 								<viz:feeds>
 									<viz.feeds:FeedItem uid="timeAxis" type="Dimension" values="timestamp"/>
 								</viz:feeds>
@@ -114,7 +114,7 @@
 						<footer>
 			<OverflowToolbar id="otbFooter">
 				<ToolbarSpacer/>
-				<Button type="Reject" text="Report issue" icon="sap-icon://alert" press="pressReportIssue">
+				<Button type="Reject" text="Create maintenance order" icon="sap-icon://alert" press="pressReportIssue">
 					<layoutData><OverflowToolbarLayoutData priority="NeverOverflow"/></layoutData>
 				</Button>
 
