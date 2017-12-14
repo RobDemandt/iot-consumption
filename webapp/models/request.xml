@@ -1,0 +1,12 @@
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:urn="urn:sap-com:document:sap:rfc:functions">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <urn:Z_MAIN_NOTIF_CREATE>
+         <DevSerialnumber>000000000010000318</DevSerialnumber>
+         <ExternalNumber>test</ExternalNumber>
+         <NotifType>M1</NotifType>
+         <ServiceMode>M</ServiceMode>
+         <FUNCTIONAL_LOCATION>M</FUNCTIONAL_LOCATION>
+      </urn:Z_MAIN_NOTIF_CREATE>
+   </soapenv:Body>
+</soapenv:Envelope>

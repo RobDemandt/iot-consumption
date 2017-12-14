@@ -17,6 +17,14 @@
       },
       "description": "RDMS Destination"
     },
+        {
+      "path": "/NOTIFCALL",
+      "target": {
+        "type": "destination",
+        "name": "NOTIFCALL"
+      },
+      "description": "NOTIFCALL Destination"
+    },
     {
       "path": "/resources",
       "target": {

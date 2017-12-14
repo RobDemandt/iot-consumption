@@ -163,26 +163,39 @@ sap.ui.define([
 				beginButton: new Button({
 					text: 'Submit',
 					press: function() {
-						var sText = sap.ui.getCore().byId('confirmDialogTextarea').getValue();
+						//var sText = sap.ui.getCore().byId('confirmDialogTextarea').getValue();
+						//var sText = sap.ui.getCore().byId('confirmDialogTextarea').getValue();
 						MessageToast.show('Maitenance notification is send in S/4HANA.');
+						var testing;
+						var response;
+
+						$.ajax('./models/request.xml', {
+							dataType: 'text',
+							success: function(data22) {
+								testing = data22;
+								this.oXML = data22;
+								$.ajax({
+									url: "/NOTIFCALL?apikey=762FEpW49Q8AA49JLG014G5DtAvEjbWe",
+									type: "POST",
+									data: testing,
+									dataType: "xml",
+									contentType: "text/xml",
+									success: function(data2, textStatus, jqXHR) {
+										response = data2;
+										console.log("Success!");
+									},
+									error: function(xhr, status) {
+										console.log("ERROR");
+									},
+									complete: function(xhr, status) {
+										console.log("Success");
+									}
+								});
+							}
+						});
 
 						//Send Notification actually to S/4HANA
 
-						var oModel = new sap.ui.model.json.JSONModel();
-						var aData = jQuery.ajax({
-							type: "GET",
-							contentType: "application/json",
-							url: "http://sapm04.ibsolution.local:50000/demo.sap.com~d337_resttest_web/rest/todo/init/",
-							dataType: "json",
-							async: false,
-							success: function(data, textStatus, jqXHR) {
-								oModel.setData({
-									modelData: data
-								});
-								alert("success to post");
-							}
-
-						});
 						dialog.close();
 					}
 				}),
@@ -489,11 +502,38 @@ sap.ui.define([
 			});
 
 			//Change the infostate for the temperatur tile
-			if (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") > 30) {
+			if (this.testModel.getProperty("/d/results/0/C_TEMPERATURE") > 35) {
 				//Create maintence notification automatically
 				if (this._oTileModel.getProperty("/TileCollection/1/infoState") != "Error") {
 					console.log('Automatic creation of maintenance notification');
-					MessageToast.show('Temperature error detected, maintenance notification created in S/4HANA.');
+					MessageToast.show('Temperature error detected, maintenance notification created in S/4HANA.'  , {duration: 6000} ) ;
+					var testing;
+					var response;
+
+					$.ajax('./models/request.xml', {
+						dataType: 'text',
+						success: function(data22) {
+							testing = data22;
+							this.oXML = data22;
+							$.ajax({
+								url: "/NOTIFCALL?apikey=762FEpW49Q8AA49JLG014G5DtAvEjbWe",
+								type: "POST",
+								data: testing,
+								dataType: "xml",
+								contentType: "text/xml",
+								success: function(data2, textStatus, jqXHR) {
+									response = data2;
+									console.log("Success!");
+								},
+								error: function(xhr, status) {
+									console.log("ERROR");
+								},
+								complete: function(xhr, status) {
+									console.log("Success");
+								}
+							});
+						}
+					});
 				}
 				(this._oTileModel.setProperty("/TileCollection/1/infoState", "Error"));
 				(this._oTileModel.setProperty("/TileCollection/1/info", "Error"));
